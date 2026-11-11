@@ -1,0 +1,4 @@
+<?php require __DIR__ . '/../resources/views/components/header.php'; ?>
+<main class="pt-20"><section class="bg-mist px-6 py-20 lg:px-8 lg:py-28"><div class="mx-auto max-w-5xl"><p class="eyebrow">Instruktur</p><h1 class="section-title">Belajar dari Praktisi Industri.</h1><p class="mt-6 max-w-2xl text-lg leading-8 text-slate-600">Informasi instruktur mencakup bio, kualifikasi, bidang keahlian, dan pengalaman profesional.</p><p class="mt-5 max-w-2xl text-sm leading-6 text-slate-500">Profil, kualifikasi, dan foto ditampilkan setelah disetujui instruktur dan mendapat izin publikasi.</p><a href="contact.php?type=public" class="mt-8 inline-block rounded-xl bg-industrial px-6 py-4 text-sm font-bold text-white">Tanyakan Program Pelatihan</a></div></section></main>
+<?php require __DIR__ . '/../resources/views/components/instructor-list.php'; ?>
+<?php require __DIR__ . '/../resources/views/components/footer.php'; ?>

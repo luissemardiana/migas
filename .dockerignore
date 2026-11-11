@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+**/.env
+**/.env.*
+vendor/
+storage/logs/
+storage/private/
+storage/sessions/
+tests/

@@ -1,0 +1,6 @@
+{
+  "name": "migas/training",
+  "description": "MIGAS Training participant portal",
+  "require": {"php": "^8.2", "phpmailer/phpmailer": "^6.10", "bacon/bacon-qr-code": "^3.0"},
+  "config": {"sort-packages": true}
+}

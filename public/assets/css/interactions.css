@@ -1,0 +1,90 @@
+/* Shared interaction feedback; carousel positioning remains on .program-slide. */
+:is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"]) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: translate .24s cubic-bezier(.2,.7,.3,1), scale .18s ease,
+    box-shadow .28s ease, background-color .24s ease, border-color .24s ease,
+    color .24s ease, transform .24s ease !important;
+}
+
+:is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,.18) 48%, transparent 76%);
+  transform: translateX(-120%);
+}
+
+:is(.catalog-card, a.panel, article.panel, .catalog-grid > .panel, #agenda article, #insights article, .program-slide-link, a.stat) {
+  transition: translate .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease,
+    border-color .3s ease, transform .3s ease;
+}
+.catalog-card > img { transition: scale .55s cubic-bezier(.2,.7,.3,1); }
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"]):not(:disabled):not([aria-disabled="true"]):is(:hover, :focus-visible) {
+    translate: 0 -2px;
+    box-shadow: 0 8px 22px rgba(36,120,234,.23);
+  }
+  :is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"]):not(:disabled):not([aria-disabled="true"]):is(:hover, :focus-visible)::after {
+    transform: translateX(120%);
+    transition: transform .65s cubic-bezier(.2,.65,.3,1);
+  }
+  :is(.catalog-card, a.panel, article.panel, .catalog-grid > .panel, #agenda article, a.stat):not(:has(form)):is(:hover, :focus-within) {
+    translate: 0 -5px;
+    border-color: rgba(36,120,234,.48);
+    box-shadow: 0 18px 38px rgba(20,43,69,.12), 0 0 0 1px rgba(36,120,234,.08);
+  }
+  #insights article:is(:hover, :focus-within) {
+    box-shadow: 0 18px 38px rgba(20,43,69,.14);
+  }
+  .catalog-card:is(:hover, :focus-within) > img { scale: 1.035; }
+  .program-slide:is(:hover, :focus-within) .program-slide-link {
+    translate: 0 -3px;
+    border-color: rgba(184,215,255,.9);
+    box-shadow: 0 22px 48px rgba(4,18,34,.4), 0 0 0 2px rgba(36,120,234,.28);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"]):not(:disabled):not([aria-disabled="true"]):active {
+    translate: 0 0;
+    scale: .975;
+  }
+}
+
+:is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"]):is(:disabled, [aria-disabled="true"]) {
+  translate: none !important;
+  scale: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+:is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"]):is(:disabled, [aria-disabled="true"])::after { display: none; }
+
+/* Neutralize legacy hover movement on touchscreens as well. */
+@media (hover: none), (pointer: coarse) {
+  #home a:hover, #inhouse a:hover, main > section:last-of-type a:hover,
+  #insights article:hover, #programs article:not(.program-slide):hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .program-slide-link:hover .program-slide-image { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"], .catalog-card, a.panel, article.panel, .catalog-grid > .panel, #agenda article, #insights article, .program-slide-link, a.stat, .catalog-card > img) {
+    transition: none !important;
+    translate: none !important;
+    scale: none !important;
+  }
+  :is(.btn, .hero-cta, .consent-submit, button[type="submit"], a[class*="rounded"][class*="px-"])::after { display: none; }
+  #home a:hover, #inhouse a:hover, main > section:last-of-type a:hover,
+  #insights article:hover, #programs article:not(.program-slide):hover,
+  .program-slide-link:is(:hover, :focus-visible) .program-slide-image {
+    transform: none;
+  }
+  #insights article img { transform: none !important; transition: none !important; }
+}

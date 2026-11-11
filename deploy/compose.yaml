@@ -1,0 +1,65 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: migastraining-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-migas_training}
+      MYSQL_USER: ${DB_USER:-migas_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in deploy/.env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set DB_ROOT_PASSWORD in deploy/.env}
+    volumes:
+      - migastraining-db:/var/lib/mysql
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    networks:
+      - database
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: migastraining-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_URL: ${APP_URL:-https://migastraining.duckdns.org}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_ENCRYPTION: ${SMTP_ENCRYPTION:-tls}
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-migas_training}
+      DB_USER: ${DB_USER:-migas_app}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in deploy/.env}
+    volumes:
+      - migastraining-private:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1/health.php') === 'ok' ? 0 : 1);"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    networks:
+      - database
+      - caddy
+
+volumes:
+  migastraining-db:
+  migastraining-private:
+
+networks:
+  database:
+    internal: true
+  caddy:
+    external: true
+    name: n8n_default

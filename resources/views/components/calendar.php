@@ -1,0 +1,7 @@
+<?php
+$month=query('month',date('Y-m'));if(!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/',$month))$month=date('Y-m');
+$calendarStart=new DateTimeImmutable($month.'-01');$days=(int)$calendarStart->format('t');$startDay=(int)$calendarStart->format('N');
+$previous=$calendarStart->modify('-1 month')->format('Y-m');$next=$calendarStart->modify('+1 month')->format('Y-m');
+$calendarQuery=$_GET;unset($calendarQuery['month']);$calendarBase=basename($_SERVER['SCRIPT_NAME']).'?'.http_build_query($calendarQuery);$calendarBase.=$calendarQuery?'&':'';
+?>
+<details class="panel" style="margin-bottom:24px"><summary style="font-weight:750;cursor:pointer">Kalender · <?= e($calendarStart->format('F Y')) ?></summary><div class="actions"><a class="btn secondary" href="<?= e($calendarBase.'month='.$previous) ?>">Bulan sebelumnya</a><a class="btn secondary" href="<?= e($calendarBase.'month='.$next) ?>">Bulan berikutnya</a></div><div class="calendar"><?php foreach(['Sen','Sel','Rab','Kam','Jum','Sab','Min'] as $day): ?><div class="weekday"><?= $day ?></div><?php endforeach; ?><?php for($blank=1;$blank<$startDay;$blank++): ?><div class="day"></div><?php endfor; ?><?php for($day=1;$day<=$days;$day++):$date=$month.'-'.str_pad((string)$day,2,'0',STR_PAD_LEFT); ?><div class="day"><strong><?= $day ?></strong><?php foreach($calendarEvents as $event):if($event['date']!==$date)continue; ?><a href="<?= e($event['url']) ?>"><?= e($event['title']) ?></a><?php endforeach; ?></div><?php endfor; ?></div></details>

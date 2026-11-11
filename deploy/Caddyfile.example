@@ -1,0 +1,4 @@
+migas.example.com {
+    encode zstd gzip
+    reverse_proxy migastraining-web:80
+}
